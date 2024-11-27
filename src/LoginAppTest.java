@@ -1,13 +1,22 @@
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 import java.sql.*;
+import java.io.*;
 
 public class LoginAppTest {
     private LoginApp loginApp;
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws Exception {
+        // Initialize LoginApp
         loginApp = new LoginApp();
+
+        // Set up the test database
+        String setupFilePath = "db/setup.sql";  // Adjust path if needed
+        Connection connection = DriverManager.getConnection("jdbc:sqlite:test.db");
+        ScriptRunner runner = new ScriptRunner(connection);
+        runner.runScript(new BufferedReader(new FileReader(setupFilePath)));
+        connection.close();
     }
 
     @Test
